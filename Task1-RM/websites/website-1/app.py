@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return render_template('index.html', image_file='crow2waw22222.jpg')
+    return render_template('index.html', image_file='crow2wawwdadasdas22222.jpg')
 
 
 if __name__ == '__main__':
