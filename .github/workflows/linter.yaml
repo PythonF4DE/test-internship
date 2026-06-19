@@ -7,6 +7,7 @@ on:
 
 jobs:
   changes:
+    permissions: write-all
     runs-on: ubuntu-latest
     outputs:
       python: ${{ steps.filter.outputs.python }}
@@ -24,7 +25,7 @@ jobs:
 
   actions-lint:
     needs: changes
-    if: needs.changes.outputs.actions == true
+    if: needs.changes.outputs.actions == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -37,7 +38,7 @@ jobs:
 
   python-lint:
     needs: changes
-    if: needs.changes.outputs.python == true
+    if: needs.changes.outputs.python == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
