@@ -33,7 +33,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt intsall yamllint -y
-          yamllint ./github/workflows/**
+          yamllint ./.github/workflows/**
 
 
   python-lint:
