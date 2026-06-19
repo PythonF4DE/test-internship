@@ -1,75 +1,54 @@
+---
 name: Linter
 
 on:
   pull_request:
-  push:
   workflow_dispatch:
+  push:
 
 jobs:
   changes:
+    permissions: write-all
     runs-on: ubuntu-latest
-
     outputs:
       actions: ${{ steps.filter.outputs.actions }}
       python: ${{ steps.filter.outputs.python }}
-
     steps:
       - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Detect changed files
-        uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             actions:
-              - '.github/workflows/**'
-
+              - ".github/workflows/**"
             python:
-              - 'Task1-RM/websites/**'
+              - "Task1-RM/websites/**"
 
-      - name: Debug
-        run: |
-          echo "actions=${{ steps.filter.outputs.actions }}"
-          echo "python=${{ steps.filter.outputs.python }}"
 
   actions-lint:
     needs: changes
     if: needs.changes.outputs.actions == 'true'
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v5
-
-      - name: Install yamllint
+      - name: Run yaml linter against action workflows
         run: |
           sudo apt update
-          sudo apt install -y yamllint
+          sudo apt install yamllint -y
+          yamllint ./.github/workflows
 
-      - name: Run yamllint
-        run: |
-          yamllint .github/workflows
 
   python-lint:
     needs: changes
     if: needs.changes.outputs.python == 'true'
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v5
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
-      - name: Install flake8
+      - name: Run flake8 against Python applications
         run: |
           python -m pip install --upgrade pip
-          pip install flake8
-
-      - name: Run flake8
-        run: |
-          flake8 Task1-RM/websites
+          python -m pip install flake8
+          flake8 ./Task1-RM/websites
