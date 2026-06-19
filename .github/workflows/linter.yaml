@@ -10,6 +10,7 @@ jobs:
     permissions: write-all
     runs-on: ubuntu-latest
     outputs:
+      actions: ${{ steps.filter.outputs.actions }}
       python: ${{ steps.filter.outputs.python }}
     steps:
       - uses: actions/checkout@v5
@@ -18,9 +19,9 @@ jobs:
         with:
           filters: |
             actions:
-              - "./.github/workflows/**"
+              - ".github/workflows/**"
             python:
-              - "./Task1-RM/websites/**"
+              - "Task1-RM/websites/**"
 
 
   actions-lint:
@@ -32,7 +33,7 @@ jobs:
       - name: Run yaml linter against action workflows
         run: |
           sudo apt update
-          sudo apt intsall yamllint -y
+          sudo apt install yamllint -y
           yamllint ./.github/workflows/**
 
 
