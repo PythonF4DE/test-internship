@@ -52,3 +52,12 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install flake8
           flake8 ./Task1-RM/websites
+
+      - name: Debug filter outputs
+        run: |
+          echo "actions=${{ steps.filter.outputs.actions }}"
+          echo "python=${{ steps.filter.outputs.python }}"
+
+      - name: Debug changed files
+        run: |
+          echo '${{ steps.filter.outputs.python_files }}'
