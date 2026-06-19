@@ -4,6 +4,7 @@ name: Linter
 on:
   pull_request:
   workflow_dispatch:
+  push:
 
 jobs:
   changes:
