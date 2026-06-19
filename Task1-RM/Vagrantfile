@@ -1,0 +1,78 @@
+Vagrant.configure("2") do |config|
+
+  web1_ip = "192.168.56.11"
+  web2_ip = "192.168.56.12"
+  lb_ip   = "192.168.56.10"
+  db_ip   = "192.168.56.13"
+
+  ["web-1", "web-2"].each do |server_name|
+
+    config.vm.define server_name do |server|
+      server.vm.box = "ubuntu/focal64"
+      server.vm.hostname = server_name
+
+      ip = (server_name == "web-1") ? web1_ip : web2_ip
+      server.vm.network "private_network", ip: ip
+
+      if ["web-1"].include?(server_name)
+        server.vm.synced_folder "./websites/website-1", "/vagrant_data_personal"
+      end
+
+      if ["web-2"].include?(server_name)
+        server.vm.synced_folder "./websites/website-2", "/vagrant_data_personal"
+      end
+
+      server.vm.synced_folder "./websites/common", "/vagrant_data_common"
+
+      server.vm.provider "virtualbox" do |vb|
+        vb.name = server_name
+        vb.memory = 4096
+        vb.cpus = 2
+      end
+
+      server.vm.provision "shell", path: "./scripts/web-server.sh"
+
+    end
+  end
+
+  config.vm.define "load-balancer" do |lb|
+    lb.vm.box = "ubuntu/focal64"
+    lb.vm.hostname = "load-balancer"
+
+    lb.vm.network "private_network", ip: lb_ip
+    lb.vm.network "public_network"
+
+    lb.vm.synced_folder "./load-balancer", "/vagrant_data"
+
+    lb.vm.provider "virtualbox" do |vb|
+        vb.name = "load-balancer"
+        vb.memory = "4096"
+        vb.cpus = 2
+    end
+
+    lb.vm.provision "shell" do |s|
+      s.path = "scripts/load-balancer.sh"
+      s.env = {
+        "WEB_SERVER_1_IP" => web1_ip,
+        "WEB_SERVER_2_IP" => web2_ip
+      }
+    end
+  end
+
+  config.vm.define "database" do |db|
+    db.vm.box = "ubuntu/focal64"
+    db.vm.hostname = "database"
+
+    db.vm.network "private_network", ip: db_ip
+
+    db.vm.synced_folder "./mysql", "/vagrant_data"
+
+    db.vm.provider "virtualbox" do |vb|
+        vb.name = "database"
+        vb.memory = "4096"
+        vb.cpus = 2
+    end
+
+    db.vm.provision "shell", path: "./scripts/database.sh"
+  end
+end

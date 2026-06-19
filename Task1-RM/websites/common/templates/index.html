@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Web Page</title>
+    <style>
+        body { text-align: center; font-family: sans-serif; margin-top: 50px; }
+        img { max-width: 100%; height: auto; border: 2px solid #333; }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename=image_file) }}" alt="A nice picture">
+    
+    <h1>Welcome!</h1>
+    <p>Sighted in Lviv.</p>
+</body>
+</html>
