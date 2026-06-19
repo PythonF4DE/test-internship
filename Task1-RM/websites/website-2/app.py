@@ -2,9 +2,11 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
-    return render_template('index.html', image_file='bigbird.jpg')
+    return render_template('index.html', image_file='bigb2222ird.jpg')
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
