@@ -7,6 +7,7 @@ on:
 
 jobs:
   changes:
+    permissions: write-all
     runs-on: ubuntu-latest
     outputs:
       python: ${{ steps.filter.outputs.python }}
