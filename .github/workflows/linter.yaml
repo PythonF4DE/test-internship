@@ -8,14 +8,15 @@ on:
 
 jobs:
   changes:
-    permissions: write-all
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     outputs:
       actions: ${{ steps.filter.outputs.actions }}
       python: ${{ steps.filter.outputs.python }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: dorny/paths-filter@v3
+      - uses: actions/checkout@v7
+      - uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |
@@ -30,7 +31,7 @@ jobs:
     if: needs.changes.outputs.actions == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Run yaml linter against action workflows
         run: |
           sudo apt update
@@ -43,7 +44,7 @@ jobs:
     if: needs.changes.outputs.python == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
